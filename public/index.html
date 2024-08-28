@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totalphonebill Price Plans</title>
+    <script src="./express.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div x-data="totalphonebillWidget" class="container mt-5">
+        <h1 class="text-center text-primary mb-4">Totalphonebill Price Plans</h1>
+
+        <button @click="showTable = !showTable" class="btn btn-outline-primary mb-3 mx-auto d-block"
+            x-text="showTable ? 'Hide Table' : 'Show Table'"></button>
+
+        <section x-show="showTable" x-transition class="mb-4">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Plan Name</th>
+                            <th scope="col">SMS Price</th>
+                            <th scope="col">Call Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="plan in pricePlans">
+                            <tr>
+                                <td x-text="plan.plan_name"></td>
+                                <td x-text="plan.sms_price"></td>
+                                <td x-text="plan.call_price"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <button @click="showFirstSection = !showFirstSection" class="btn btn-outline-primary mb-4 mx-auto d-block"
+            x-text="showFirstSection ? 'Hide Widgets' : 'Show Widgets'"></button>
+
+        <div x-show="showFirstSection" x-transition>
+            <section class="widget p-4 mb-4 bg-light rounded shadow-sm">
+                <h3 class="mb-3 text-secondary">Calculate Phone Bills</h3>
+                <div x-show="billMessage.length > 0" class="alert alert-info mb-3" x-text="billMessage">
+                    Bill message will be displayed here....
+                </div>
+                <div class="mb-3">
+                    <label for="plan" class="form-label">Enter plan name:</label>
+                    <input type="text" class="form-control" placeholder="Plan name" x-model="plan" id="plan">
+                </div>
+                <div class="mb-3">
+                    <label for="usage" class="form-label">Enter bill usage:</label>
+                    <input type="text" class="form-control" placeholder="Call, SMS" x-model="usage" id="usage">
+                </div>
+                <button class="btn btn-primary w-100" x-on:click="calculateBill()">Calculate Bill</button>
+            </section>
+
+            <section class="widget p-4 mb-4 bg-light rounded shadow-sm">
+                <h3 class="mb-3 text-secondary">Create Phone Bill Plan</h3>
+                <div class="mb-3">
+                    <label for="new_plan_name" class="form-label">Enter plan name:</label>
+                    <input type="text" class="form-control" placeholder="Plan name" x-model="new_plan_name"
+                        id="new_plan_name">
+                </div>
+                <div class="mb-3">
+                    <label for="new_sms_price" class="form-label">Enter SMS price:</label>
+                    <input type="text" class="form-control" placeholder="0.00" x-model="new_sms_price"
+                        id="new_sms_price">
+                </div>
+                <div class="mb-3">
+                    <label for="new_call_price" class="form-label">Enter call price:</label>
+                    <input type="text" class="form-control" placeholder="0.00" x-model="new_call_price"
+                        id="new_call_price">
+                </div>
+                <button class="btn btn-primary w-100" x-on:click="createPlan()">Create Plan</button>
+            </section>
+
+            <section class="widget p-4 mb-4 bg-light rounded shadow-sm">
+                <h3 class="mb-3 text-secondary">Update Phone Bill Plan</h3>
+                <div class="mb-3">
+                    <label for="updatePlanName" class="form-label">Enter plan name:</label>
+                    <input type="text" class="form-control" placeholder="Plan name" x-model="updatePlanName"
+                        id="updatePlanName">
+                </div>
+                <div class="mb-3">
+                    <label for="updateSmsPrice" class="form-label">Enter SMS price:</label>
+                    <input type="text" class="form-control" placeholder="0.00" x-model="updateSMSPrice"
+                        id="updateSMSPrice">
+                </div>
+                <div class="mb-3">
+                    <label for="updateCallPrice" class="form-label">Enter call price:</label>
+                    <input type="text" class="form-control" placeholder="0.00" x-model="updateCallPrice"
+                        id="updateCallPrice">
+                </div>
+                <button class="btn btn-primary w-100" x-on:click="updatePlan()">Update Plan</button>
+            </section>
+
+            <section class="widget p-4 mb-4 bg-light rounded shadow-sm">
+                <h3 class="mb-3 text-secondary">Delete Phone Bill Plan</h3>
+                <div class="mb-3">
+                    <label for="deletePlanName" class="form-label">Enter the plan name:</label>
+                    <input type="text" class="form-control" placeholder="Plan name" x-model="deletePlanName"
+                        id="deletePlanName">
+                </div>
+                <button class="btn btn-danger w-100" x-on:click="deletePlan()">Delete Plan</button>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>
